@@ -1,0 +1,126 @@
+#include <Wire.h>
+#include <LiquidCrystal.h>
+
+LiquidCrystal lcd(12, 11, 5, 4, 3, 2);
+ 
+#include <DS1302RTC.h>
+#include <Time.h>
+
+#include <dht11.h>
+
+dht11 DHT11; 
+
+#define DHT11PIN 6 
+
+
+
+DS1302RTC RTC(9, 7, 8);
+
+
+#define DS1302_GND_PIN 33
+#define DS1302_VCC_PIN 35
+const int CapteurPin = 13;
+int interrupteur = LOW;       
+int etat = 0;             
+int Capteur = 0;  
+int tempsa;
+int tempsb;
+int compteur;
+
+
+void setup() {
+lcd.begin(20,4);
+  pinMode(CapteurPin, INPUT);    
+  digitalWrite(DS1302_GND_PIN, LOW);
+  pinMode(DS1302_GND_PIN, OUTPUT);
+
+  digitalWrite(DS1302_VCC_PIN, HIGH);
+  pinMode(DS1302_VCC_PIN, OUTPUT);
+  setSyncProvider(RTC.get);       
+  delay ( 2000 );
+  lcd.clear();
+}
+
+
+void loop() {
+  calcul_vitesse();
+  mesure_temperature();
+  heure();
+
+  
+}
+
+void calcul_vitesse()
+{
+   Capteur = digitalRead(CapteurPin);
+
+  if (Capteur == LOW) {    
+
+    if (etat == 0) {
+   
+tempsa = millis();
+ compteur = compteur + 1;  
+ 
+    }  
+         
+     
+  }
+  else {
+tempsb=millis();
+    int tempsfin;
+    tempsfin=millis()-tempsa;
+   
+    if(compteur=1) {
+
+  lcd.clear();  
+  lcd.setCursor(0,1);
+  lcd.print("VITESSE: ");
+//lcd.print(tempsfin);
+  lcd.print("20km/h");
+
+
+    }
+compteur = 0;
+    
+
+  }
+
+
+}
+
+void mesure_temperature()
+{
+    int chk = DHT11.read(DHT11PIN); 
+
+ lcd.setCursor(0,2);
+  lcd.print("Humidite: "); 
+  lcd.print(DHT11.humidity);
+  lcd.setCursor(12,2);
+  lcd.print("%");
+  lcd.setCursor(0,3);
+  lcd.print("Temperature: "); 
+  lcd.print(DHT11.temperature); 
+  lcd.setCursor(15,3);
+  lcd.print("'C");
+    
+}
+
+void heure()
+{
+static int sday = 0; 
+
+ lcd.setCursor(7, 0);
+  print2digits(hour()+2);
+  lcd.print(":");
+  print2digits(minute()-10);
+  delay(80);
+
+}
+
+void print2digits(int number) {
+  if (number >= 0 && number < 10) {
+    lcd.write('0');
+  }
+  lcd.print(number);
+}
+
