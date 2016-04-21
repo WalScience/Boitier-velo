@@ -16,8 +16,6 @@ DS1302RTC RTC(9, 7, 8);
 const int CapteurPin = 13;
 int etat = 0;             
 int Capteur = 0;  
-int tempsa;
-int tempsb;
 int compteur;
 float vitesse1=0;
 float tempssec = 0;
