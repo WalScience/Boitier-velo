@@ -14,7 +14,6 @@ DS1302RTC RTC(9, 7, 8);
 
 
 const int CapteurPin = 13;
-int interrupteur = LOW;       
 int etat = 0;             
 int Capteur = 0;  
 int tempsa;
