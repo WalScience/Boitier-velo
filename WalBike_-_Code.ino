@@ -242,7 +242,6 @@ void Carte_SD() {
     lcd.setCursor(3,0);
     lcd.print("ERREUR FICHIER");
   }  
-  delay(30000);
 }
 
 void Clignotant_Droit() {
